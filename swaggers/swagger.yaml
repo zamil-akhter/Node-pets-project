@@ -1,0 +1,806 @@
+openapi: 3.0.0
+info:
+  title: Node Pets Project
+  version: 1.0.0
+  description: A Node-Express JS application where users can manage their profile and see their pets.
+servers:
+  - url: http://localhost:8000
+  - url: http://localhost:9000
+security:
+  - bearerAuth: []
+tags:
+  - name: User
+    description: Everything about Users
+  - name: Pet
+    description: Everything about Pets
+paths:
+  /user/sendOtpOnMail/{email}:
+    post:
+      summary: Send otp to create an Account
+      tags:
+        - User
+      parameters:
+        - name: email
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/sendOtpOnMail'
+      responses:
+        "200":
+          description: Otp sent successfully on email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sendOtpSuccessResponse'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/catchErrorResponse'
+  /user/signUp:
+    post:
+      summary: Signup a new user
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signUp'
+      responses:
+        "200":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signUpSuccessResponse'
+        "400":
+          description: Invalid input or OTP errors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/signUpErrorResponse'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/catchErrorResponse'
+  /user/forgetPassword/{email}:
+    post:
+      summary: Send otp on email for user signup
+      tags:
+        - User
+      parameters:
+        - name: email
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Email sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/forgetPasswordSuccessResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/catchErrorResponse'
+  /user/renderResetPassword/{token}:
+    get:
+      summary: Render to Ejs to Reset Password
+      tags:
+        - User
+      parameters:
+        - name: token
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Render Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/renderResetPasswordSuccessResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/catchErrorResponse'
+  /user/handleResetPassword:
+    post:
+      summary: Handle password changing
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/handleResetPassword'
+      responses:
+        "200":
+          description: Login successfull
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handleResetPasswordSuccessResponse'
+        "401":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizeErrorResponse'
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/handleResetPasswordErrorResponse'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/catchErrorResponse'
+  /user/logIn:
+    post:
+      summary: Login a user
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/logIn'
+      responses:
+        "200":
+          description: Login successfull
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/logInSuccessResponse'
+        "401":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizeErrorResponse'
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/logInErrorResponse'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/catchErrorResponse'
+  /user/changePassword:
+    patch:
+      security:
+        - bearerAuth: []
+      summary: Change password of loged-in user
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/changePassword'
+      responses:
+        "200":
+          description: Password Changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/changePasswordSuccessResponse'
+        "401":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizeErrorResponse'
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/changePasswordErrorResponse'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/catchErrorResponse'
+  /user/showProfile:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Get loged-in user profile
+      tags:
+        - User
+      responses:
+        "200":
+          description: Get Profile Details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/showProfileSuccessResponse'
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/showProfileErrorResponse'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/catchErrorResponse'
+  /user/deleteAccount:
+    delete:
+      security:
+        - bearerAuth: []
+      summary: Delete loged-in user account
+      tags:
+        - User
+      responses:
+        "200":
+          description: User deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deleteAccountSuccessResponse'
+        "401":
+          description: Unauthorized error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizeErrorResponse'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/catchErrorResponse'
+  /user/uploadProfilePicture:
+    post:
+      security:
+        - bearerAuth: []
+      summary: Upload profile picture and gallery images
+      description: Upload a profile picture and multiple gallery images for the user. Only .jpg .jpeg .png files are allowed in images and the image size must be less than 2MB.
+      tags:
+        - User
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/uploadProfilePicture'
+      responses:
+        "200":
+          description: Images uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uploadProfilePictureSuccessResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uploadProfilePictureErrorResponse'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/catchErrorResponse'
+  /user/addLocation:
+    post:
+      summary: Loged-in user can set their location
+      tags:
+        - User
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type : number
+            format : float
+          description : Latitude of the location
+        - name: long
+          in: query
+          required: true
+          schema:
+            type : number
+            format : float
+          description : Longitude of the location
+      responses:
+        "200":
+          description: User location added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/addLocationSuccessResponse'
+        "400":
+          description: Value is Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/addLocationErrorResponse'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/catchErrorResponse'
+  /user/findNearbyUsers:
+    post:
+      summary: Loged-in user can see other Nearby users
+      tags:
+        - User
+      parameters:
+        - name: maxDistance
+          in: query
+          required: true
+          schema:
+            type : number
+          description : Maximum Distance in meter
+      responses:
+        "200":
+          description: Nearest users data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/findNearbyUsersSuccessResponse'
+        "400":
+          description: Value is Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/findNearbyUsersErrorResponse'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/catchErrorResponse'
+  /user/findNearbyPets:
+    get:
+      summary: Loged-in user can see their Nearby pets
+      tags:
+        - User
+      responses:
+        "200":
+          description: Nearby Pets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/findNearbyPetsSuccessResponse'
+        "400":
+          description: Value is Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/findNearbyPetsErrorResponse'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/catchErrorResponse'
+  /pet/create:
+    post:
+      summary: Create a pet
+      tags:
+        - Pet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createAPet'
+      responses:
+        "200":
+          description: Otp sent successfully on email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/petCreateSuccessResponse'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/catchErrorResponse'
+  /pet/setPetLocation:
+    post:
+      summary: Set pet's location
+      tags:
+        - Pet
+      parameters:
+        - name: _id
+          in: query
+          required: true
+          schema:
+            type : string
+          description : pet's id
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type : number
+            format : float
+          description : Latitude of the location
+        - name: long
+          in: query
+          required: true
+          schema:
+            type : number
+            format : float
+          description : Longitude of the location
+      responses:
+        "200":
+          description: Pet location added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/setPetLocationSuccessResponse'
+        "400":
+          description: Value is Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/setPetLocationErrorResponse'
+        "401":
+          description: Value is Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizeErrorResponse'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/catchErrorResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    successResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: "Response Okay"
+    unauthorizeErrorResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          example: 401
+        error:
+          type: string
+          example: "Invalid Input"
+    catchErrorResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          example: 500
+        error:
+          type: string
+          example: "An error occurred while processing the request"
+    sendOtpOnMail:
+      type: string
+      format: email
+    signUp:
+      type: object  
+      required:
+        - fullName
+        - email
+        - phoneNumber
+        - gender
+        - emailotp
+        - password
+      properties:
+        fullName:
+          type: string
+          example: "demo demo"
+        email:
+          type: string
+          format: email
+          description: The email address of the user
+          example: "demo@email.com"
+        emailotp:
+          type: string
+          description: The OTP sent to the user's email
+          example: 5811
+        phoneNumber:
+          type: string
+          description: The phone number of the user
+          example: "1234490651"
+        gender:
+          type: string
+          description: The gender of the user
+          enum:
+            - male
+            - female
+            - other
+          example: "male"
+        password:
+          type: string
+          description: The password for the user account
+          example: "Abc@123"
+    uploadProfilePicture:
+      type: object
+      required:
+        - images
+        - gallery
+      properties:
+        images:
+          type: string
+          format: binary
+        gallery:
+          type: array
+          items:
+            type: string
+            format: binary
+    handleResetPassword:
+      type: object
+      required:
+        - token
+        - password
+        - repeatPassword
+      properties:
+        token:
+          type: string
+        password:
+          type: string
+          example: "Abc@123"
+        repeatPassword:
+          type: string
+          example: "Abc@123"
+    logIn:  
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "demo@email.com"
+        password:
+          type: string
+          example: "Abc@123"
+    changePassword:
+      type: object
+      required:
+        - oldPassword
+        - newPassword
+        - repeatNewPassword
+      properties:
+        oldPassword:
+          type: string
+        newPassword:
+          type: string
+        repeatNewPassword:
+          type: string
+    sendOtpSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Otp sent successfully"
+    signUpSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "User Created"
+    signUpErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Otp is incorrect"
+    forgetPasswordSuccessResponse:
+      type: object
+      properties:
+        messages:
+          type: string
+          example: Password reset mail has been sent
+    renderResetPasswordSuccessResponse:
+      type: object
+      properties:
+        messages:
+          type: string
+          example: Successfully Render to EJS
+    handleResetPasswordSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Password Updated
+    handleResetPasswordErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Password and Repeat-password not matching"
+    logInSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Login successfull"
+        data:
+          type: string
+          example: there will be token
+    logInErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Password is incorrect"
+    changePasswordSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Password successfully changed"
+    changePasswordErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Old password is Incorrect"
+    showProfileSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Profile Details"
+        data:
+          type: object
+          examle: there will be profile details
+    showProfileErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "User not found"
+    deleteAccountSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "User deleted successfully"
+    uploadProfilePictureSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Images uploaded successfully
+    uploadProfilePictureErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Authorization or Token is mising || Email is required || file size is more than limits
+    createAPet:
+      type: object
+      required:
+        - petName
+        - gender
+        - ownerId
+      properties:
+        petName:
+          type: string
+        gender:
+          type: string
+          example: "male/female"
+        ownerId:
+          type: string
+          example: "Owner Id"
+    petCreateSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Pet created successfully"
+    addLocationSuccessResponse:
+      type: object
+      properties:
+        status: 
+          type: number
+          example: 200
+        message:
+          type: string
+          example: User location added successfully
+    addLocationErrorResponse:
+      type: object
+      properties:
+        status: 
+          type: number
+          example: 400
+        message:
+          type: string
+          example: Latitude and longitude are required
+    findNearbyUsersSuccessResponse:
+      type: object
+      properties:
+        status: 
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Neared users
+    findNearbyUsersErrorResponse:
+      type: object
+      properties:
+        status: 
+          type: number
+          example: 400
+        message:
+          type: string
+          example: Somethings is missing
+    findNearbyPetsSuccessResponse:
+      type: object
+      properties:
+        status: 
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Neared pets
+    findNearbyPetsErrorResponse:
+      type: object
+      properties:
+        status: 
+          type: number
+          example: 400
+        message:
+          type: string
+          example: Somethings is missing
+    setPetLocationSuccessResponse:
+      type: object
+      properties:
+        status: 
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Pet's location added successfully
+    setPetLocationErrorResponse:
+      type: object
+      properties:
+        status: 
+          type: number
+          example: 400
+        message:
+          type: string
+          example: Somethings is missing
+    
