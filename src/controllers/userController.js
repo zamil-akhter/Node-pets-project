@@ -363,14 +363,12 @@ const showAllUser = async (req, res) => {
 const getUsersPets = async (req, res) => {
   try {
     const userId = req.params.id;
-    console.log("userid--------------------->", userId);
 
     const user = await userSchema.findById(userId);
-    console.log("---------------->", user);
-
     if (!user) {
       return sendUnauthorizeError(res, "User not found");
     }
+    
     const data = await userSchema.aggregate([
       {
         $match: {
@@ -379,7 +377,7 @@ const getUsersPets = async (req, res) => {
       },
       {
         $lookup: {
-          from: "pets",
+          from: "pets",   //! db name or petSchema ????
           localField: "_id",
           foreignField: "ownerId",
           as: "pets",

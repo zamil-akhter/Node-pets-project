@@ -1,7 +1,7 @@
 const express = require("express");
 const userRouter = require("./routes/userRouter");
 const petRouter = require("./routes/petRouter");
-const swaggerSetup = require('../swaggers/swaggerSetup');
+const swaggerSetup = require("../swaggers/swaggerSetup");
 
 const app = express();
 app.set("view engine", "ejs");

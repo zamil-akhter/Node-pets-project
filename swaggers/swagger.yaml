@@ -24,20 +24,20 @@ paths:
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/sendOtpOnMail'
+            $ref: "#/components/schemas/sendOtpOnMail"
       responses:
         "200":
           description: Otp sent successfully on email
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/sendOtpSuccessResponse'
+                $ref: "#/components/schemas/sendOtpSuccessResponse"
         "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/catchErrorResponse'
+                $ref: "#/components/schemas/catchErrorResponse"
   /user/signUp:
     post:
       summary: Signup a new user
@@ -48,26 +48,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/signUp'
+              $ref: "#/components/schemas/signUp"
       responses:
         "200":
           description: User created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/signUpSuccessResponse'
+                $ref: "#/components/schemas/signUpSuccessResponse"
         "400":
           description: Invalid input or OTP errors
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/signUpErrorResponse'
+                $ref: "#/components/schemas/signUpErrorResponse"
         "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/catchErrorResponse'
+                $ref: "#/components/schemas/catchErrorResponse"
   /user/forgetPassword/{email}:
     post:
       summary: Send otp on email for user signup
@@ -83,13 +83,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/forgetPasswordSuccessResponse'
+                $ref: "#/components/schemas/forgetPasswordSuccessResponse"
         "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/catchErrorResponse'
+                $ref: "#/components/schemas/catchErrorResponse"
   /user/renderResetPassword/{token}:
     get:
       summary: Render to Ejs to Reset Password
@@ -105,13 +105,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/renderResetPasswordSuccessResponse'
+                $ref: "#/components/schemas/renderResetPasswordSuccessResponse"
         "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/catchErrorResponse'
+                $ref: "#/components/schemas/catchErrorResponse"
   /user/handleResetPassword:
     post:
       summary: Handle password changing
@@ -122,32 +122,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/handleResetPassword'
+              $ref: "#/components/schemas/handleResetPassword"
       responses:
         "200":
           description: Login successfull
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/handleResetPasswordSuccessResponse'
+                $ref: "#/components/schemas/handleResetPasswordSuccessResponse"
         "401":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/unauthorizeErrorResponse'
+                $ref: "#/components/schemas/unauthorizeErrorResponse"
         "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/handleResetPasswordErrorResponse'
+                $ref: "#/components/schemas/handleResetPasswordErrorResponse"
         "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/catchErrorResponse'
+                $ref: "#/components/schemas/catchErrorResponse"
   /user/logIn:
     post:
       summary: Login a user
@@ -158,32 +158,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/logIn'
+              $ref: "#/components/schemas/logIn"
       responses:
         "200":
           description: Login successfull
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/logInSuccessResponse'
+                $ref: "#/components/schemas/logInSuccessResponse"
         "401":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/unauthorizeErrorResponse'
+                $ref: "#/components/schemas/unauthorizeErrorResponse"
         "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/logInErrorResponse'
+                $ref: "#/components/schemas/logInErrorResponse"
         "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/catchErrorResponse'
+                $ref: "#/components/schemas/catchErrorResponse"
   /user/changePassword:
     patch:
       security:
@@ -196,32 +196,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/changePassword'
+              $ref: "#/components/schemas/changePassword"
       responses:
         "200":
           description: Password Changed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/changePasswordSuccessResponse'
+                $ref: "#/components/schemas/changePasswordSuccessResponse"
         "401":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/unauthorizeErrorResponse'
+                $ref: "#/components/schemas/unauthorizeErrorResponse"
         "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/changePasswordErrorResponse'
+                $ref: "#/components/schemas/changePasswordErrorResponse"
         "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/catchErrorResponse'
+                $ref: "#/components/schemas/catchErrorResponse"
   /user/showProfile:
     get:
       security:
@@ -235,19 +235,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/showProfileSuccessResponse'
+                $ref: "#/components/schemas/showProfileSuccessResponse"
         "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/showProfileErrorResponse'
+                $ref: "#/components/schemas/showProfileErrorResponse"
         "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/catchErrorResponse'
+                $ref: "#/components/schemas/catchErrorResponse"
   /user/deleteAccount:
     delete:
       security:
@@ -261,19 +261,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/deleteAccountSuccessResponse'
+                $ref: "#/components/schemas/deleteAccountSuccessResponse"
         "401":
           description: Unauthorized error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/unauthorizeErrorResponse'
+                $ref: "#/components/schemas/unauthorizeErrorResponse"
         "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/catchErrorResponse'
+                $ref: "#/components/schemas/catchErrorResponse"
   /user/uploadProfilePicture:
     post:
       security:
@@ -286,26 +286,26 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/uploadProfilePicture'
+              $ref: "#/components/schemas/uploadProfilePicture"
       responses:
         "200":
           description: Images uploaded successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/uploadProfilePictureSuccessResponse'
+                $ref: "#/components/schemas/uploadProfilePictureSuccessResponse"
         "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/uploadProfilePictureErrorResponse'
+                $ref: "#/components/schemas/uploadProfilePictureErrorResponse"
         "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/catchErrorResponse'
+                $ref: "#/components/schemas/catchErrorResponse"
   /user/addLocation:
     post:
       summary: Loged-in user can set their location
@@ -316,35 +316,35 @@ paths:
           in: query
           required: true
           schema:
-            type : number
-            format : float
-          description : Latitude of the location
+            type: number
+            format: float
+          description: Latitude of the location
         - name: long
           in: query
           required: true
           schema:
-            type : number
-            format : float
-          description : Longitude of the location
+            type: number
+            format: float
+          description: Longitude of the location
       responses:
         "200":
           description: User location added successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/addLocationSuccessResponse'
+                $ref: "#/components/schemas/addLocationSuccessResponse"
         "400":
           description: Value is Required
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/addLocationErrorResponse'
+                $ref: "#/components/schemas/addLocationErrorResponse"
         "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/catchErrorResponse'
+                $ref: "#/components/schemas/catchErrorResponse"
   /user/findNearbyUsers:
     post:
       summary: Loged-in user can see other Nearby users
@@ -355,27 +355,27 @@ paths:
           in: query
           required: true
           schema:
-            type : number
-          description : Maximum Distance in meter
+            type: number
+          description: Maximum Distance in meter
       responses:
         "200":
           description: Nearest users data
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/findNearbyUsersSuccessResponse'
+                $ref: "#/components/schemas/findNearbyUsersSuccessResponse"
         "400":
           description: Value is Required
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/findNearbyUsersErrorResponse'
+                $ref: "#/components/schemas/findNearbyUsersErrorResponse"
         "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/catchErrorResponse'
+                $ref: "#/components/schemas/catchErrorResponse"
   /user/findNearbyPets:
     get:
       summary: Loged-in user can see their Nearby pets
@@ -387,19 +387,78 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/findNearbyPetsSuccessResponse'
+                $ref: "#/components/schemas/findNearbyPetsSuccessResponse"
         "400":
           description: Value is Required
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/findNearbyPetsErrorResponse'
+                $ref: "#/components/schemas/findNearbyPetsErrorResponse"
         "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/catchErrorResponse'
+                $ref: "#/components/schemas/catchErrorResponse"
+  /user/showAll:
+    get:
+      summary: Show all users based on page and limit
+      tags:
+        - User
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: number
+          description: Page number
+        - name: limit
+          in: query
+          schema:
+            type: number
+          description: limit for data
+      responses:
+        "200":
+          description: Users are fetched
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/showAllUsersSuccessResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/catchErrorResponse"
+  /user/ownedAllPets/{id}:
+    get:
+      summary: find all owned pets by user's id
+      tags:
+        - User
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ownedAllPets"
+      responses:
+        "200":
+          description: Fetched pets
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ownedAllPetsSuccessResponse"
+        "401":
+          description: Invalid Input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/unauthorizeErrorResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/catchErrorResponse"
   /pet/create:
     post:
       summary: Create a pet
@@ -410,20 +469,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createAPet'
+              $ref: "#/components/schemas/createAPet"
       responses:
         "200":
           description: Otp sent successfully on email
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/petCreateSuccessResponse'
+                $ref: "#/components/schemas/petCreateSuccessResponse"
         "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/catchErrorResponse'
+                $ref: "#/components/schemas/catchErrorResponse"
   /pet/setPetLocation:
     post:
       summary: Set pet's location
@@ -434,47 +493,47 @@ paths:
           in: query
           required: true
           schema:
-            type : string
-          description : pet's id
+            type: string
+          description: pet's id
         - name: lat
           in: query
           required: true
           schema:
-            type : number
-            format : float
-          description : Latitude of the location
+            type: number
+            format: float
+          description: Latitude of the location
         - name: long
           in: query
           required: true
           schema:
-            type : number
-            format : float
-          description : Longitude of the location
+            type: number
+            format: float
+          description: Longitude of the location
       responses:
         "200":
           description: Pet location added successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/setPetLocationSuccessResponse'
+                $ref: "#/components/schemas/setPetLocationSuccessResponse"
         "400":
           description: Value is Required
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/setPetLocationErrorResponse'
+                $ref: "#/components/schemas/setPetLocationErrorResponse"
         "401":
           description: Value is Required
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/unauthorizeErrorResponse'
+                $ref: "#/components/schemas/unauthorizeErrorResponse"
         "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/catchErrorResponse'
+                $ref: "#/components/schemas/catchErrorResponse"
   /pet/showAll:
     get:
       summary: Show pets based on page and limit
@@ -483,35 +542,33 @@ paths:
       parameters:
         - name: page
           in: query
-          required: true
           schema:
-            type : number
-          description : Page number
+            type: number
+          description: Page number
         - name: limit
           in: query
-          required: true
           schema:
-            type : number
-          description : limit for data
+            type: number
+          description: limit for data
       responses:
         "200":
           description: Pets are fetched
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/showAllSuccessResponse'
+                $ref: "#/components/schemas/showAllSuccessResponse"
         "400":
           description: Value is Required
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/showAllErrorResponse'
+                $ref: "#/components/schemas/showAllErrorResponse"
         "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/catchErrorResponse'
+                $ref: "#/components/schemas/catchErrorResponse"
 components:
   securitySchemes:
     bearerAuth:
@@ -550,7 +607,7 @@ components:
       type: string
       format: email
     signUp:
-      type: object  
+      type: object
       required:
         - fullName
         - email
@@ -616,7 +673,7 @@ components:
         repeatPassword:
           type: string
           example: "Abc@123"
-    logIn:  
+    logIn:
       type: object
       required:
         - email
@@ -771,7 +828,7 @@ components:
     addLocationSuccessResponse:
       type: object
       properties:
-        status: 
+        status:
           type: number
           example: 200
         message:
@@ -780,7 +837,7 @@ components:
     addLocationErrorResponse:
       type: object
       properties:
-        status: 
+        status:
           type: number
           example: 400
         message:
@@ -789,7 +846,7 @@ components:
     findNearbyUsersSuccessResponse:
       type: object
       properties:
-        status: 
+        status:
           type: number
           example: 200
         message:
@@ -798,7 +855,7 @@ components:
     findNearbyUsersErrorResponse:
       type: object
       properties:
-        status: 
+        status:
           type: number
           example: 400
         message:
@@ -807,7 +864,7 @@ components:
     findNearbyPetsSuccessResponse:
       type: object
       properties:
-        status: 
+        status:
           type: number
           example: 200
         message:
@@ -816,7 +873,7 @@ components:
     findNearbyPetsErrorResponse:
       type: object
       properties:
-        status: 
+        status:
           type: number
           example: 400
         message:
@@ -825,7 +882,7 @@ components:
     setPetLocationSuccessResponse:
       type: object
       properties:
-        status: 
+        status:
           type: number
           example: 200
         message:
@@ -834,7 +891,7 @@ components:
     setPetLocationErrorResponse:
       type: object
       properties:
-        status: 
+        status:
           type: number
           example: 400
         message:
@@ -843,12 +900,38 @@ components:
     showAllSuccessResponse:
       type: object
       properties:
-        status: 
+        status:
           type: number
           example: 200
         message:
           type: string
           example: Pets are fetched
         pets data:
+          type: string
+          example: data will be there
+    showAllUsersSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Users are fetched
+        pets data:
+          type: string
+          example: data will be there
+    ownedAllPets:
+      type: string
+    ownedAllPetsSuccessResponse:
+      type: object
+      properties:
+        status:
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Pets are fetched
+        data:
           type: string
           example: data will be there

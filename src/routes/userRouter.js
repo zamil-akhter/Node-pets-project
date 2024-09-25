@@ -83,11 +83,8 @@ router.get(
   userController.findNearbyPets
 );
 
-// API
 router.get("/showAll", userController.showAllUser);
-
-// API
-router.get("/:id", userController.getUsersPets);
+router.get("/ownedAllPets/:id", userController.getUsersPets);
 
 module.exports = router;
 

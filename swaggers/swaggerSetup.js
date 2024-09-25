@@ -1,10 +1,9 @@
-const swaggerUi = require('swagger-ui-express');
-const yamlJS = require('yamljs');
-const path = require('path');
+const swaggerUi = require("swagger-ui-express");
+const yamlJS = require("yamljs");
+const path = require("path");
 
-const swaggerDocument = yamlJS.load(path.join(__dirname, 'swagger.yaml'));
+const swaggerDocument = yamlJS.load(path.join(__dirname, "swagger.yaml"));
 
 module.exports = (app) => {
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-}
-
+  app.use("/documentation", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+};
