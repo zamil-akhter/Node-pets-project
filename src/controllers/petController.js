@@ -1,3 +1,4 @@
+const { skipMiddlewareFunction } = require("mongoose");
 const petSchema = require("../models/petSchema");
 const {
   sendSuccess,
@@ -12,17 +13,23 @@ const createPet = async (req, res) => {
     const { petName, gender, ownerId } = req.body;
     const location = req.body?.location ?? null;
     const data = { petName, gender, ownerId, location };
-    const createdPets = await petSchema.create(data);
+    await petSchema.create(data);
     return sendSuccess(res, "A Pet is created");
   } catch (e) {
     return sendCatchError(res, e);
   }
 };
 
-// perform pagination
 const showAllPets = async (req, res) => {
   try {
-    const pets = await petSchema.find();
+    const page = Number(req.query?.page) || 1;
+    const limit = Number(req.query?.limit) || 10;
+    
+    const skip = (page - 1) * limit;
+    const pets = await petSchema.aggregate([
+      { $skip: skip },
+      { $limit : limit}
+    ]);
     return sendSuccessWithData(res, "Pets are fetched", pets);
   } catch (e) {
     return sendCatchError(res, e);

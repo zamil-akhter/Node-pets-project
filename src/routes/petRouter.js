@@ -26,6 +26,7 @@ router.post(
 
 // swagger left
 router.get("/showAll", petController.showAllPets);
+
 // swagger left
 router.patch("/updateOwner", petController.updatePetOwner);
 // swagger left

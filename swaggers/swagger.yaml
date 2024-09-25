@@ -475,6 +475,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/catchErrorResponse'
+  /pet/showAll:
+    get:
+      summary: Show pets based on page and limit
+      tags:
+        - Pet
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema:
+            type : number
+          description : Page number
+        - name: limit
+          in: query
+          required: true
+          schema:
+            type : number
+          description : limit for data
+      responses:
+        "200":
+          description: Pets are fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/showAllSuccessResponse'
+        "400":
+          description: Value is Required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/showAllErrorResponse'
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/catchErrorResponse'
 components:
   securitySchemes:
     bearerAuth:
@@ -803,4 +840,15 @@ components:
         message:
           type: string
           example: Somethings is missing
-    
+    showAllSuccessResponse:
+      type: object
+      properties:
+        status: 
+          type: number
+          example: 200
+        message:
+          type: string
+          example: Pets are fetched
+        pets data:
+          type: string
+          example: data will be there
