@@ -84,7 +84,7 @@ router.get(
 );
 
 // API
-router.get("/", userController.showAllUser);
+router.get("/showAll", userController.showAllUser);
 
 // API
 router.get("/:id", userController.getUsersPets);

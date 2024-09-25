@@ -24,7 +24,6 @@ router.post(
   petController.setPetLocation
 );
 
-// swagger left
 router.get("/showAll", petController.showAllPets);
 
 // swagger left
