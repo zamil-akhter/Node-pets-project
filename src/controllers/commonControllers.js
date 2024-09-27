@@ -12,7 +12,7 @@ const generateOtp = async () => {
   return OTP;
 };
 
-const sendOtpOnEmail = async (email, otp) => {
+const sendEmail = async (otpMailOptions) => {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -22,20 +22,13 @@ const sendOtpOnEmail = async (email, otp) => {
       },
     });
 
-    const mailOptions = {
-      from: process.env.GMAILID,
-      to: email,
-      subject: `OTP for Signup ${otp}`,
-      html: `
-            <p>Dear user,</p>
-            <p>${otp} is your one time password (OTP). Please do not share the OTP with others.</p>
-            <p>Regards,<br>Zamil Akhter</p>`,
-    };
+    const mailOptions = otpMailOptions;
 
     const info = await transporter.sendMail(mailOptions);
     return info;
-  } catch (error) {
-    return sendCatchError(res, error);
+  } catch (e) {
+    console.log('Error, ', e.message);
+    // return sendCatchError(res, error);
   }
 };
 
@@ -80,6 +73,6 @@ const sendResetLink = async (token) => {
 
 module.exports = {
   generateOtp,
-  sendOtpOnEmail,
+  sendEmail,
   sendResetLink,
 };

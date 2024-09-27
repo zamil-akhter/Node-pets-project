@@ -60,6 +60,7 @@ router.delete(
 router.post(
   "/uploadProfilePicture",
   authMiddleware.verifyToken,
+  userController.ensureFolderIsPresent,
   uploadPic.uploadOnLocal,
   uploadPic.uploadOnCloudinary,
   userController.storeImagesInDB

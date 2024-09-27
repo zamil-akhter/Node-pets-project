@@ -4,6 +4,9 @@ const emailOtpSchema = require("../models/emailOtpSchema");
 const userLocationSchema = require("../models/userLocationSchema");
 const petSchema = require("../models/petSchema");
 const mongoose = require("mongoose");
+const schedule = require("node-schedule");
+const path = require("path");
+const fs = require("fs").promises;
 const {
   sendSuccess,
   sendSuccessWithData,
@@ -15,13 +18,25 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const tokenManager = require("../auth/tokenManager");
 const commonController = require("./commonControllers");
+const userJob = require("../jobs/userJob");
 
 const sendOtpOnMail = async (req, res) => {
   try {
     const { email } = req.params;
 
     const otp = await commonController.generateOtp();
-    const info = await commonController.sendOtpOnEmail(email, otp);
+
+    const otpMailOptions = {
+      from: process.env.GMAILID,
+      to: email,
+      subject: `OTP for Signup ${otp}`,
+      html: `
+            <p>Dear user,</p>
+            <p>${otp} is your one time password (OTP). Please do not share the OTP with others.</p>
+            <p>Regards,<br>Zamil Akhter</p>`,
+    };
+
+    const info = await commonController.sendEmail(otpMailOptions);
     const checkEmailExists = await emailOtpSchema.findOne({ email: email });
     // const time = moment().add(5,'minutes').format('x');
 
@@ -69,13 +84,14 @@ const signUp = async (req, res) => {
       return sendError(res, "Account already exists with this email");
     }
 
-    await userSchema.create({
+    const createdUser = await userSchema.create({
       email,
       fullName,
       phoneNumber,
       gender,
       password: await bcrypt.hash(password, 10),
     });
+
     return sendSuccess(res, "User Created");
   } catch (e) {
     return sendCatchError(res, e);
@@ -156,7 +172,6 @@ const logIn = async (req, res) => {
       phoneNumber: existingUser.phoneNumber,
     };
     const userToken = tokenManager.generateToken(payload);
-
     return sendSuccessWithData(res, "Login successfull", userToken);
   } catch (e) {
     return sendCatchError(res, e);
@@ -208,18 +223,59 @@ const showProfile = async (req, res) => {
 
 const deleteAccount = async (req, res) => {
   try {
-    const email = req.user.email;
+    const {email} = req.user;
+    
 
     const user = await userSchema.findOneAndDelete({ email: email });
     if (user) {
       await emailOtpSchema.findOneAndDelete({ email: email });
       await userAlbumSchema.findOneAndDelete({ email: email });
+      //! await userLocationSchema.findByIdAndDelete({ _id });   //do with find by id
+
+      const accountDeleteMailOptions = {
+        from: process.env.GMAILID,
+        to: email,
+        subject: `Account Deleted`,
+        html: `
+              <p>Hey. ${user.fullName}</p>
+              <p>Your account has been deleted permanently</p>
+              <p>Regards,<br>Team Backend</p>`,
+      };
+
+      userJob.sendAccountDeletionEmail(userCreatedMailOptions);
     } else {
       return sendUnauthorizeError(res, "User does not exists");
     }
     return sendSuccess(res, "User deleted successfully");
   } catch (e) {
     return sendCatchError(res, e);
+  }
+};
+
+const ensureFolderIsPresent = async (req, res, next) => {
+  try {
+    const publicFolderPath = path.join(__dirname, "..", "public");
+    const galleryFolderPath = path.join(publicFolderPath, "gallery");
+    const imagesFolderPath = path.join(publicFolderPath, "images");
+
+    await ensureFolderExists("public", publicFolderPath);
+    await ensureFolderExists("gallery", galleryFolderPath);
+    await ensureFolderExists("images", imagesFolderPath);
+
+    next();
+  } catch (e) {
+    sendCatchError(res, e);
+  }
+};
+
+const ensureFolderExists = async (folderName, folderPath) => {
+  try {
+    await fs.access(folderPath);
+    // console.log(`${folderName} folder already exists at: ${folderPath}`);
+  } catch (err) {
+    console.log(`${folderName} folder does not exist. so creating it...`);
+    await fs.mkdir(folderPath, { recursive: true });
+    console.log(`${folderName} Folder created successfully at: ${folderPath}`);
   }
 };
 
@@ -255,16 +311,16 @@ const storeImagesInDB = async (req, res) => {
 const addLacationByLatLong = async (req, res) => {
   try {
     const { lat, long } = req.query;
-    const userId = req.user._id;
-
+    let userId = req.user._id;
+    userId = new mongoose.Types.ObjectId(userId);
     if (!lat || !long) {
       return sendError(res, "Latitude and longitude are required");
     }
 
-    const newUserLocation = await userLocationSchema.findOneAndUpdate(
-      { userId:userId },
+    await userLocationSchema.findOneAndUpdate(
+      { userId },
       {
-        userId:userId,
+        userId,
         location: {
           type: "Point",
           coordinates: [parseFloat(lat), parseFloat(long)],
@@ -272,6 +328,12 @@ const addLacationByLatLong = async (req, res) => {
       },
       { upsert: true }
     );
+
+    await userSchema.findByIdAndUpdate(
+      { _id: userId },
+      { isLocationSet: true }
+    );
+
     sendSuccess(res, "User location added successfully");
   } catch (e) {
     sendCatchError(res, e);
@@ -303,10 +365,10 @@ const findNearbyUsers = async (req, res) => {
       {
         $match: {
           userId: {
-            $ne : userId
-          }
-        }  
-      }
+            $ne: userId,
+          },
+        },
+      },
     ]);
 
     return sendSuccessWithData(res, "Nearest users", users);
@@ -348,11 +410,11 @@ const showAllUser = async (req, res) => {
   try {
     const page = Number(req.query?.page) || 1;
     const limit = Number(req.query?.limit) || 10;
-    
+
     const skip = (page - 1) * limit;
     const users = await userSchema.aggregate([
       { $skip: skip },
-      { $limit : limit}
+      { $limit: limit },
     ]);
     return sendSuccessWithData(res, "User fetched", users);
   } catch (e) {
@@ -368,7 +430,7 @@ const getUsersPets = async (req, res) => {
     if (!user) {
       return sendUnauthorizeError(res, "User not found");
     }
-    
+
     const data = await userSchema.aggregate([
       {
         $match: {
@@ -377,7 +439,7 @@ const getUsersPets = async (req, res) => {
       },
       {
         $lookup: {
-          from: "pets",   //! db name or petSchema ????
+          from: "pets", //! db name or petSchema ????
           localField: "_id",
           foreignField: "ownerId",
           as: "pets",
@@ -413,4 +475,5 @@ module.exports = {
   addLacationByLatLong,
   findNearbyUsers,
   findNearbyPets,
+  ensureFolderIsPresent,
 };

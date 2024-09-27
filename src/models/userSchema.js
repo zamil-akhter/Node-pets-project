@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
         enum : ['male', 'female', 'other'],
         default: null
     },
+    isLocationSet : {
+        type : Boolean,
+        default : false
+    },
     password : String,
 },{timestamps:true});
 

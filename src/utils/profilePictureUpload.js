@@ -25,7 +25,10 @@ const uploadOnLocal = async (req, res, next) => {
   const fileFilter = (req, file, cb) => {
     const allowedImageExt = ["image/jpeg", "image/jpg", "image/png"];
 
-    if (file.fieldname === "images" && allowedImageExt.includes(file.mimetype)) {
+    if (
+      file.fieldname === "images" &&
+      allowedImageExt.includes(file.mimetype)
+    ) {
       cb(null, true);
     } else if (file.fieldname === "gallery") {
       cb(null, true);
