@@ -10,9 +10,9 @@ security:
   - bearerAuth: []
 tags:
   - name: User
-    description: Everything about Users
+    description: Apis about Users
   - name: Pet
-    description: Everything about Pets
+    description: Apis about Pets
 paths:
   /user/sendOtpOnMail/{email}:
     post:
