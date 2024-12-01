@@ -12,5 +12,5 @@ const userEmail = new mongoose.Schema(
   { timestamps: true }
 );
 
-const emailOtp = mongoose.model("emailWithOtp", userEmail);
-module.exports = emailOtp;
+const emailWithOtp = mongoose.model("emailWithOtp", userEmail);
+module.exports = emailWithOtp;

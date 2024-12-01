@@ -28,7 +28,6 @@ const sendEmail = async (otpMailOptions) => {
     return info;
   } catch (e) {
     console.log('Error, ', e.message);
-    // return sendCatchError(res, error);
   }
 };
 
@@ -71,8 +70,19 @@ const sendResetLink = async (token) => {
   }
 };
 
+const ensureFolderExists = async (folderName, folderPath) => {
+  try {
+    await fs.access(folderPath);
+  } catch (err) {
+    console.log(`${folderName} folder does not exist. so creating it...`);
+    await fs.mkdir(folderPath, { recursive: true });
+    console.log(`${folderName} Folder created successfully at: ${folderPath}`);
+  }
+};
+
 module.exports = {
   generateOtp,
   sendEmail,
   sendResetLink,
+  ensureFolderExists
 };

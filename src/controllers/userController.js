@@ -33,10 +33,11 @@ const sendOtpOnMail = async (req, res) => {
       html: `
             <p>Dear user,</p>
             <p>${otp} is your one time password (OTP). Please do not share the OTP with others.</p>
-            <p>Regards,<br>Zamil Akhter</p>`,
+            <p>Regards,<br>Team Backend</p>`,
     };
 
     const info = await commonController.sendEmail(otpMailOptions);
+    console.log('info---------->>>', info);
     const checkEmailExists = await emailOtpSchema.findOne({ email: email });
     // const time = moment().add(5,'minutes').format('x');
 
@@ -84,7 +85,7 @@ const signUp = async (req, res) => {
       return sendError(res, "Account already exists with this email");
     }
 
-    const createdUser = await userSchema.create({
+    await userSchema.create({
       email,
       fullName,
       phoneNumber,
@@ -225,12 +226,11 @@ const deleteAccount = async (req, res) => {
   try {
     const {email} = req.user;
     
-
     const user = await userSchema.findOneAndDelete({ email: email });
     if (user) {
       await emailOtpSchema.findOneAndDelete({ email: email });
       await userAlbumSchema.findOneAndDelete({ email: email });
-      //! await userLocationSchema.findByIdAndDelete({ _id });   //do with find by id
+      // await userLocationSchema.findByIdAndDelete({ _id });   //!do with find by id
 
       const accountDeleteMailOptions = {
         from: process.env.GMAILID,
@@ -258,24 +258,13 @@ const ensureFolderIsPresent = async (req, res, next) => {
     const galleryFolderPath = path.join(publicFolderPath, "gallery");
     const imagesFolderPath = path.join(publicFolderPath, "images");
 
-    await ensureFolderExists("public", publicFolderPath);
-    await ensureFolderExists("gallery", galleryFolderPath);
-    await ensureFolderExists("images", imagesFolderPath);
+    await commonController.ensureFolderExists("public", publicFolderPath);
+    await commonController.ensureFolderExists("gallery", galleryFolderPath);
+    await commonController.ensureFolderExists("images", imagesFolderPath);
 
     next();
   } catch (e) {
     sendCatchError(res, e);
-  }
-};
-
-const ensureFolderExists = async (folderName, folderPath) => {
-  try {
-    await fs.access(folderPath);
-    // console.log(`${folderName} folder already exists at: ${folderPath}`);
-  } catch (err) {
-    console.log(`${folderName} folder does not exist. so creating it...`);
-    await fs.mkdir(folderPath, { recursive: true });
-    console.log(`${folderName} Folder created successfully at: ${folderPath}`);
   }
 };
 

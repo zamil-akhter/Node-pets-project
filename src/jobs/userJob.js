@@ -43,6 +43,8 @@ const userLocationReminder = async () => {
       });
     }
   );
+
+  // userLocationReminderJob.cancel();
 };
 
 module.exports = {

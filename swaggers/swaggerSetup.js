@@ -5,5 +5,5 @@ const path = require("path");
 const swaggerDocument = yamlJS.load(path.join(__dirname, "swagger.yaml"));
 
 module.exports = (app) => {
-  app.use("/documentation", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 };

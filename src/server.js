@@ -10,7 +10,7 @@ const port = process.env.PORT;
     await dbConnection.databaseConnection();
     app.listen(port, () => {
       console.log(`Server is listening on http://localhost:${port}`);
-      console.log(`Swagger is running on http://localhost:8000/documentation/`);
+      console.log(`Swagger is running on http://localhost:8000/docs/`);
     });
   } catch (e) {
     return sendCatchError(res, e);
